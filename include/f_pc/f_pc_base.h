@@ -12,7 +12,6 @@
 #include "f_pc/f_pc_profile.h"
 
 struct create_request;
-struct profile_method_class;
 
 typedef struct base_process_class {
     /* 0x00 */ u32 mBsType;

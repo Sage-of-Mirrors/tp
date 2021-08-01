@@ -90,7 +90,7 @@ struct J3DMaterialTable {
 // Forward References:
 //
 
-extern "C" void __ct__10fopAc_ac_cFv();
+//extern "C" void __ct__10fopAc_ac_cFv();
 extern "C" void __dt__5csXyzFv();
 extern "C" void __ct__11J3DLightObjFv();
 extern "C" void __dt__11dEvt_info_cFv();
@@ -98,7 +98,7 @@ extern "C" void __dt__10fopAc_ac_cFv();
 extern "C" void fopAc_IsActor__FPv();
 extern "C" static void fopAc_Draw__FPv();
 extern "C" static void fopAc_Execute__FPv();
-extern "C" static void fopAc_IsDelete__FPv();
+int fopAc_IsDelete(void* actor); //extern "C" static void fopAc_IsDelete__FPv();
 extern "C" static void fopAc_Delete__FPv();
 extern "C" static void fopAc_Create__FPv();
 extern "C" void getFileListInfo__15dStage_roomDt_cCFv();
@@ -123,7 +123,7 @@ extern "C" void fopAcM_delete__FP10fopAc_ac_c();
 extern "C" void fopAcM_DeleteHeap__FP10fopAc_ac_c();
 extern "C" void fopAcM_cullingCheck__FPC10fopAc_ac_c();
 extern "C" void fopDwTg_ToDrawQ__FP16create_tag_classi();
-extern "C" void fopDwTg_DrawQTo__FP16create_tag_class();
+extern "C" void fopDwTg_DrawQTo__FP16create_tag_class(create_tag_class *);
 extern "C" void fopDwTg_Init__FP16create_tag_classPv();
 extern "C" void fpcBs_Is_JustOfType__Fii();
 extern "C" void fpcBs_MakeOfType__FPi();
@@ -171,6 +171,14 @@ extern "C" extern u8 struct_80451124[4];
 //
 
 /* 80018B64-80018BD0 0134A4 006C+00 0/0 7/7 562/562 .text            __ct__10fopAc_ac_cFv */
+#ifdef NONMATCHING
+
+fopAc_ac_c::fopAc_ac_c() : mEvtInfo(), mTevStr(j3dDefaultLightInfo) {
+
+}
+
+#else
+
 #pragma push
 #pragma optimization_level 0
 #pragma optimizewithasm off
@@ -179,6 +187,8 @@ asm fopAc_ac_c::fopAc_ac_c() {
 #include "asm/f_op/f_op_actor/__ct__10fopAc_ac_cFv.s"
 }
 #pragma pop
+
+#endif
 
 /* 80018BD0-80018C0C 013510 003C+00 0/0 12/12 0/0 .text            __dt__5csXyzFv */
 #pragma push
@@ -207,7 +217,7 @@ SECTION_DATA extern void* g_fopAc_Method[8] = {
     (void*)fopAc_Create__FPv,
     (void*)fopAc_Delete__FPv,
     (void*)fopAc_Execute__FPv,
-    (void*)fopAc_IsDelete__FPv,
+    (void*)fopAc_IsDelete,
     (void*)fopAc_Draw__FPv,
     (void*)NULL,
     (void*)NULL,
@@ -245,17 +255,13 @@ asm fopAc_ac_c::~fopAc_ac_c() {
 
 /* ############################################################################################## */
 /* 80450CB8-80450CBC 0001B8 0004+00 2/2 0/0 0/0 .sbss            g_fopAc_type */
-static u8 g_fopAc_type[4];
+static u32 g_fopAc_type;
 
 /* 80018CE0-80018D0C 013620 002C+00 0/0 12/12 391/391 .text            fopAc_IsActor__FPv */
-#pragma push
-#pragma optimization_level 0
-#pragma optimizewithasm off
-asm void fopAc_IsActor(void* param_0) {
-    nofralloc
-#include "asm/f_op/f_op_actor/fopAc_IsActor__FPv.s"
+int fopAc_IsActor(void* actor) {
+  fopAc_ac_c* actorCast = (fopAc_ac_c*)actor;
+  return fpcBs_Is_JustOfType(g_fopAc_type, actorCast->mAcType);
 }
-#pragma pop
 
 /* ############################################################################################## */
 /* 80450CBC-80450CC0 0001BC 0004+00 2/2 1/1 0/0 .sbss            stopStatus__10fopAc_ac_c */
@@ -289,14 +295,16 @@ static asm void fopAc_Execute(void* param_0) {
 #pragma pop
 
 /* 80018F78-80018FCC 0138B8 0054+00 1/0 0/0 0/0 .text            fopAc_IsDelete__FPv */
-#pragma push
-#pragma optimization_level 0
-#pragma optimizewithasm off
-static asm void fopAc_IsDelete(void* param_0) {
-    nofralloc
-#include "asm/f_op/f_op_actor/fopAc_IsDelete__FPv.s"
+int fopAc_IsDelete(void* actor) {
+  fopAc_ac_c* actorCast = (fopAc_ac_c*)actor;
+  
+  int isDelete = fpcMtd_IsDelete(&actorCast->mSubMtd->mBase.mBase, actorCast);
+  if (isDelete == 1) {
+    fopDwTg_DrawQTo__FP16create_tag_class(&actorCast->mDwTg);
+  }
+  
+  return isDelete;
 }
-#pragma pop
 
 /* 80018FCC-8001904C 01390C 0080+00 1/0 0/0 0/0 .text            fopAc_Delete__FPv */
 #pragma push

@@ -12,6 +12,13 @@ typedef struct leafdraw_method_class {
     /* 0x10 */ process_method_func mpDrawFunc;
 } leafdraw_method_class;
 
+typedef struct profile_method_class {
+    leafdraw_method_class mBase;
+    process_method_func mpUnkFunc1;
+    process_method_func mpUnkFunc2;
+    process_method_func mpUnkFunc3;
+} profile_method_class;
+
 typedef struct leafdraw_class {
     /* 0x00 */ base_process_class mBase;
     /* 0xB8 */ leafdraw_method_class* mpDrawMtd;

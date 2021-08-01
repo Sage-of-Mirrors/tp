@@ -4,6 +4,7 @@
 
 #include "dolphin/types.h"
 #include "f_pc/f_pc_method.h"
+#include "f_pc/f_pc_leaf.h"
 
 struct nodedraw_method_class;
 
