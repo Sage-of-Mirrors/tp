@@ -258,7 +258,7 @@ asm fopAc_ac_c::~fopAc_ac_c() {
 static u32 g_fopAc_type;
 
 /* 80018CE0-80018D0C 013620 002C+00 0/0 12/12 391/391 .text            fopAc_IsActor__FPv */
-int fopAc_IsActor(void* actor) {
+BOOL fopAc_IsActor(void* actor) {
   fopAc_ac_c* actorCast = (fopAc_ac_c*)actor;
   return fpcBs_Is_JustOfType(g_fopAc_type, actorCast->mAcType);
 }
@@ -295,10 +295,10 @@ static asm void fopAc_Execute(void* param_0) {
 #pragma pop
 
 /* 80018F78-80018FCC 0138B8 0054+00 1/0 0/0 0/0 .text            fopAc_IsDelete__FPv */
-int fopAc_IsDelete(void* actor) {
+BOOL fopAc_IsDelete(void* actor) {
   fopAc_ac_c* actorCast = (fopAc_ac_c*)actor;
   
-  int isDelete = fpcMtd_IsDelete(&actorCast->mSubMtd->mBase.mBase, actorCast);
+  BOOL isDelete = fpcMtd_IsDelete(&actorCast->mSubMtd->mBase.mBase, actorCast);
   if (isDelete == 1) {
     fopDwTg_DrawQTo__FP16create_tag_class(&actorCast->mDwTg);
   }
